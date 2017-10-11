@@ -1,0 +1,50 @@
+group 'org.lijun'
+version '1.0'
+
+buildscript {
+    ext {
+        // kotlin版本
+        kotlin_version = '1.1.50'
+        // 通用模块版本
+        common_project_version = '1.2'
+        // 数据源版本
+        druid_version = '1.1.2'
+        mysql_connector_version = '5.1.10'
+        p6spy_version = '2.1.2'
+        // 前端相关js库版本
+        jquery_version = '1.9.1'
+    }
+
+    repositories {
+        mavenLocal()
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public'}
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
+repositories {
+    mavenLocal()
+    maven {url 'http://maven.aliyun.com/nexus/content/groups/public'}
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.lijun:common-project:$common_project_version"
+    compile "com.alibaba:druid-spring-boot-starter:$druid_version"
+    compile "p6spy:p6spy:$p6spy_version"
+    compile "mysql:mysql-connector-java:$mysql_connector_version"
+    compile "org.lijun.webjars:jquery:$jquery_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
