@@ -26,7 +26,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         hbm2ddl:
-          auto: update
+          auto: create
         current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
   mvc:
     favicon:

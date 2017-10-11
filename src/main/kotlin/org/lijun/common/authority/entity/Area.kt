@@ -25,67 +25,43 @@ import javax.persistence.Entity
 import javax.persistence.Table
 
 /**
- * Entity - SysMenu
+ * Entity - Area
  *
  * @author lijun
  * @constructor
  */
 @Entity
-@Table(name = "tb_sys_menu")
+@Table(name = "tb_area")
 @DynamicInsert
 @DynamicUpdate
-class SysMenu : UserAuditingEntity() {
+class Area : UserAuditingEntity() {
 
     /**
-     * 菜单名称
+     * 区域编码
      */
-    @Column(columnDefinition = "VARCHAR(200) COMMENT '菜单名称'")
-    var menuName: String? = null
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '区域编码'")
+    var code: String? = null
 
     /**
-     * 菜单URL
+     * 名称
      */
-    @Column(columnDefinition = "VARCHAR(200) COMMENT '菜单URL'")
-    var menuUrl: String? = null
+    @Column(name = "[name]", columnDefinition = "VARCHAR(100) COMMENT '区域名称'")
+    var name: String? = null
 
     /**
-     * 上级菜单
+     * 上级区域
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", columnDefinition = "BIGINT(10) COMMENT '上级菜单ID'")
+    @JoinColumn(name = "parent_id", columnDefinition = "BIGINT(10) COMMENT '上级区域ID'")
     @NotFound(action = NotFoundAction.IGNORE)
-    var parent: SysMenu? = null
+    var parent: Area? = null
 
     /**
-     * 菜单节点图标
-     */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '菜单节点图标样式'")
-    var iconCls: String? = null
-
-    /**
-     * 菜单权限标识
-     */
-    @Column(columnDefinition = "VARCHAR(100) COMMENT '菜单权限标识'")
-    var permission: String? = null
-
-    /**
-     * 是否显示
-     */
-    @Column(columnDefinition = "TINYINT(1) COMMENT '是否显示'")
-    var display: Boolean? = null
-
-    /**
-     * 菜单显示顺序
-     */
-    @Column(columnDefinition = "BIGINT(10) COMMENT '显示顺序'")
-    var sort: Long? = null
-
-    /**
-     * 子菜单
+     * 下级区域
      */
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
     @Fetch(FetchMode.SUBSELECT)
-    var childs: Set<SysMenu>? = null
+    var childs: Set<Area>? = null
 
 }
