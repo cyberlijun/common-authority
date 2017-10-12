@@ -96,4 +96,11 @@ class SysMenu : UserAuditingEntity() {
     @Fetch(FetchMode.SUBSELECT)
     var roles: Set<Role>? = null
 
+    /**
+     * 判断菜单是否显示
+     * @return
+     */
+    @Transient
+    fun isShow(): Boolean = this.display ?: false
+
 }
