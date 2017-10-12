@@ -21,8 +21,9 @@ package org.lijun.common.authority.entity
 
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import javax.persistence.Entity
-import javax.persistence.Table
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
+import javax.persistence.*
 
 /**
  * Entity - SysUser
@@ -35,4 +36,62 @@ import javax.persistence.Table
 @DynamicInsert
 @DynamicUpdate
 class SysUser : UserAuditingEntity() {
+
+    /**
+     * Enum - Status
+     */
+    enum class Status {
+
+        /**
+         * 正常
+         */
+        NORMAL,
+
+        /**
+         * 停用
+         */
+        DISABLED
+
+    }
+
+    /**
+     * 所在机构
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "org_id", columnDefinition = "BIGINT(10) COMMENT '所在机构ID'")
+    @NotFound(action = NotFoundAction.IGNORE)
+    var org: Org? = null
+
+    /**
+     * 角色
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", columnDefinition = "BIGINT(10) COMMENT '角色ID'")
+    @NotFound(action = NotFoundAction.IGNORE)
+    var role: Role? = null
+
+    /**
+     * 登录用户名
+     */
+    @Column(columnDefinition = "VARCHAR(50) COMMENT '登录用户名'")
+    var username: String? = null
+
+    /**
+     * 登录密码
+     */
+    @Column(name = "[password]", columnDefinition = "VARCHAR(100) COMMENT '登录密码'")
+    var password: String? = null
+
+    /**
+     * 邮箱
+     */
+    @Column(columnDefinition = "VARCHAR(100) COMMENT '邮箱'")
+    var email: String? = null
+
+    /**
+     * 状态
+     */
+    @Column(name = "[status]", columnDefinition = "INT(1) COMMENT '状态'")
+    var status: Status = SysUser.Status.NORMAL
+
 }

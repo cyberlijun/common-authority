@@ -19,58 +19,57 @@
 
 package org.lijun.common.authority.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import org.hibernate.annotations.*
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
+import java.util.*
 import javax.persistence.*
-import javax.persistence.Entity
-import javax.persistence.Table
 
 /**
- * Entity - Area
+ * Entity - LoginLog
  *
  * @author lijun
  * @constructor
  */
 @Entity
-@Table(name = "tb_area")
+@Table(name = "tb_login_log")
 @DynamicInsert
 @DynamicUpdate
-class Area : UserAuditingEntity() {
+class LoginLog : UserAuditingEntity() {
 
     /**
-     * 区域编码
-     */
-    @Column(name = "[code]", columnDefinition = "VARCHAR(100) COMMENT '区域编码'")
-    var code: String? = null
-
-    /**
-     * 名称
-     */
-    @Column(name = "[name]", columnDefinition = "VARCHAR(100) COMMENT '区域名称'")
-    var name: String? = null
-
-    /**
-     * 上级区域
+     * 登录用户
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", columnDefinition = "BIGINT(10) COMMENT '上级区域ID'")
+    @JoinColumn(name = "user_id", columnDefinition = "BIGINT(10) COMMENT '用户ID'")
     @NotFound(action = NotFoundAction.IGNORE)
-    var parent: Area? = null
+    var user: SysUser? = null
 
     /**
-     * 下级区域
+     * 登录次数
      */
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    @NotFound(action = NotFoundAction.IGNORE)
-    @Fetch(FetchMode.SUBSELECT)
-    var childs: Set<Area>? = null
+    @Column(columnDefinition = "BIGINT(10) COMMENT '登录次数'")
+    var loginCount: Long = 0L
 
     /**
-     * 机构列表
+     * 登录用户IP
      */
-    @OneToMany(mappedBy = "area", fetch = FetchType.LAZY)
-    @NotFound(action = NotFoundAction.IGNORE)
-    @Fetch(FetchMode.SUBSELECT)
-    var orgs: Set<Org>? = null
+    @Column(columnDefinition = "VARCHAR(200) COMMENT '登录用户IP'")
+    var ip: String? = null
+
+    /**
+     * 最后登录时间
+     */
+    @Column(columnDefinition = "DATETIME COMMENT '最后登录时间'")
+    @Temporal(TemporalType.TIMESTAMP)
+    var lastLoginTime: Date? = null
+
+    /**
+     * 当前登录时间
+     */
+    @Column(columnDefinition = "DATETIME COMMENT '当前登录时间'")
+    @Temporal(TemporalType.TIMESTAMP)
+    var loginTime: Date? = null
 
 }

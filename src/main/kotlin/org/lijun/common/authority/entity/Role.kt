@@ -25,75 +25,42 @@ import javax.persistence.Entity
 import javax.persistence.Table
 
 /**
- * Entity - SysMenu
+ * Entity - Role
  *
  * @author lijun
  * @constructor
  */
 @Entity
-@Table(name = "tb_sys_menu")
+@Table(name = "tb_sys_role")
 @DynamicInsert
 @DynamicUpdate
-class SysMenu : UserAuditingEntity() {
+class Role : UserAuditingEntity() {
 
-    /**
-     * 菜单名称
-     */
-    @Column(columnDefinition = "VARCHAR(200) COMMENT '菜单名称'")
-    var menuName: String? = null
+    @Column(name = "[name]", columnDefinition = "VARCHAR(100) COMMENT '角色名称'")
+    var name: String? = null
 
-    /**
-     * 菜单URL
-     */
-    @Column(columnDefinition = "VARCHAR(200) COMMENT '菜单URL'")
-    var menuUrl: String? = null
-
-    /**
-     * 上级菜单
-     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", columnDefinition = "BIGINT(10) COMMENT '上级菜单ID'")
+    @JoinColumn(name = "org_id", columnDefinition = "BIGINT(10) COMMENT '所属机构ID'")
     @NotFound(action = NotFoundAction.IGNORE)
-    var parent: SysMenu? = null
+    var org: Org? = null
 
     /**
-     * 菜单节点图标
+     * 菜单列表
      */
-    @Column(columnDefinition = "VARCHAR(50) COMMENT '菜单节点图标样式'")
-    var iconCls: String? = null
-
-    /**
-     * 菜单权限标识
-     */
-    @Column(columnDefinition = "VARCHAR(100) COMMENT '菜单权限标识'")
-    var permission: String? = null
-
-    /**
-     * 是否显示
-     */
-    @Column(columnDefinition = "TINYINT(1) COMMENT '是否显示'")
-    var display: Boolean? = null
-
-    /**
-     * 菜单显示顺序
-     */
-    @Column(columnDefinition = "BIGINT(10) COMMENT '显示顺序'")
-    var sort: Long? = null
-
-    /**
-     * 子菜单
-     */
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "sys_role_menu",
+                joinColumns = arrayOf(JoinColumn(name = "role_id", columnDefinition = "BIGINT(10) COMMENT '角色ID'")),
+                inverseJoinColumns = arrayOf(JoinColumn(name = "menu_id", columnDefinition = "BIGINT(10) COMMENT '菜单ID'")))
     @NotFound(action = NotFoundAction.IGNORE)
     @Fetch(FetchMode.SUBSELECT)
-    var childs: Set<SysMenu>? = null
+    var menus: Set<SysMenu>? = null
 
     /**
-     * 角色列表
+     * 用户列表
      */
-    @ManyToMany(mappedBy = "menus", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
     @Fetch(FetchMode.SUBSELECT)
-    var roles: Set<Role>? = null
+    var users: Set<SysUser>? = null
 
 }
