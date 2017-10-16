@@ -111,7 +111,7 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
     open internal fun getChilds(menus: Set<SysMenu>, parent: SysMenu): List<SysMenu> {
         var list: LinkedList<SysMenu> = Lists.newLinkedList()
 
-        menus.filter { null != it && it.parent?.equals(parent)!! && it.isShow() }.forEach {
+        menus.filter { it.parent?.equals(parent)!! && it.isShow() }.forEach {
             list.add(it)
         }
 

@@ -92,6 +92,6 @@ class SysUser : UserAuditingEntity() {
      * 状态
      */
     @Column(name = "[status]", columnDefinition = "INT(1) COMMENT '状态'")
-    var status: Status = SysUser.Status.NORMAL
+    var status: SysUser.Status = SysUser.Status.NORMAL
 
 }
