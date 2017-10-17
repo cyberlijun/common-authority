@@ -19,19 +19,40 @@
 
 package org.lijun.common.authority.web.controller
 
+import org.lijun.common.authority.entity.SysMenu
+import org.lijun.common.authority.service.SysMenuService
+import org.lijun.common.web.controller.BaseController
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 
 /**
- * Controller - IndexController
+ * Controller - SysMenuController
  *
  * @author lijun
  * @constructor
  */
 @Controller
-open class IndexController {
+@RequestMapping("\${adminPath:admin}/menu")
+open class SysMenuController : BaseController() {
 
-    @GetMapping("/")
-    open fun index(): String = "index"
+    @Autowired
+    private lateinit var sysMenuService: SysMenuService
+
+    /**
+     * 转发到菜单管理首页
+     * @param model
+     * @return
+     */
+    @GetMapping
+    open fun index(model: Model): String {
+        val menus: List<SysMenu> = this.sysMenuService.findAll()
+
+        model.addAttribute("menus", menus)
+
+        return "admin/sys_menu/list"
+    }
 
 }

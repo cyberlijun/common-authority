@@ -35,7 +35,7 @@ spring:
     encoding:
       force: true
   freemarker:
-    cache: true
+    cache: false
     suffix: .ftl
     settings:
       template_update_delay: "0"

@@ -37,13 +37,6 @@ interface SysMenuService : BaseService<SysMenu, Long> {
     fun findRoot(): SysMenu
 
     /**
-     * 根据根节点查询
-     * @param parent
-     * @return
-     */
-    fun findByParent(parent: SysMenu): List<SysMenu>
-
-    /**
      * 根据当前登录用户获取菜单列表
      * @param user
      * @return

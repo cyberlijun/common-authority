@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse
  * @author lijun
  * @constructor
  */
-open class SysLogInterceptor : HandlerInterceptorAdapter() {
+open class SysLogInterceptor(private var auditable: Boolean) : HandlerInterceptorAdapter() {
 
     @Autowired
     private lateinit var sysLogService: SysLogService
@@ -41,7 +41,7 @@ open class SysLogInterceptor : HandlerInterceptorAdapter() {
     @Throws(Exception::class)
     override fun afterCompletion(request: HttpServletRequest?, response: HttpServletResponse?, handler: Any?, ex: Exception?) {
         if (handler is HandlerMethod && handler.bean is BaseController) {
-            this.sysLogService.save(request!!, ex)
+            this.sysLogService.save(request!!, ex, auditable)
         }
     }
 

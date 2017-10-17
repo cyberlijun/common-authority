@@ -59,10 +59,10 @@ open class SysLogServiceImpl(repository: SysLogRepository) : BaseServiceImpl<Sys
     @Autowired
     private lateinit var sysUserService: SysUserService
 
-    @Value("\${syslog.exclude-url}")
+    @Value("\${syslog.exclude-url:}")
     private lateinit var excludeUrls: Array<String>
 
-    @Value("\${syslog.ignore-params}")
+    @Value("\${syslog.ignore-params:}")
     private lateinit var ignoreParams: Array<String>
 
     private val pathMatcher: PathMatcher = AntPathMatcher()

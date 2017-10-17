@@ -19,7 +19,6 @@
 
 package org.lijun.common.authority.service.impl
 
-import com.google.common.collect.Lists
 import org.apache.commons.collections.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.lijun.common.authority.entity.SysMenu
@@ -50,31 +49,37 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
     }
 
     @Transactional(readOnly = true)
-    override fun findByParent(parent: SysMenu): List<SysMenu> {
-        return this.sysMenuRepository.findByParent(parent)
+    override fun findAll(): List<SysMenu> {
+        val menus: List<SysMenu> = this.sysMenuRepository.findAll()
+
+        val root: SysMenu = this.findRoot()
+
+        return this.sort(menus, root)
     }
 
     @Transactional(readOnly = true)
     override fun buildMenuTree(user: SysUser?): List<SysMenu> {
-        if (null == user?.role) {
+        val menus: Set<SysMenu>? = user?.role?.menus
+
+        if (CollectionUtils.isEmpty(menus)) {
             return emptyList()
         }
 
-        var list: LinkedList<SysMenu> = Lists.newLinkedList()
+        val list: LinkedList<SysMenu> = LinkedList()
 
         val root: SysMenu = this.findRoot()
 
-        val menus: Set<SysMenu> = user.role?.menus!!
+        var firstLevelMenus: List<SysMenu> = arrayListOf()
 
-        var firstLevelMenus: List<SysMenu> = Lists.newArrayList()
-
-        menus.filter { null != it.parent && it.parent?.equals(root)!! && it.isShow() }.forEach {
-            firstLevelMenus += it
+        menus?.forEach {
+            if (null != it.parent && it.parent?.equals(root)!! && it.isShow()) {
+                firstLevelMenus += it
+            }
         }
 
         if (CollectionUtils.isNotEmpty(firstLevelMenus)) {
             firstLevelMenus.sortedBy { it.sort }.forEach {
-                it.childs = this.getChilds(menus, it).toSet()
+                it.childs = getChilds(menus!!.toList(), it).toSet()
             }
 
             list.addAll(firstLevelMenus)
@@ -83,19 +88,26 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
         return list
     }
 
-    @Transactional(readOnly = true)
-    override fun findAll(): List<SysMenu> {
-        val list: LinkedList<SysMenu> = Lists.newLinkedList()
+    /**
+     * 对菜单进行排序
+     * @param menus
+     * @param parent
+     * @return
+     */
+    open internal fun sort(menus: List<SysMenu>, parent: SysMenu): List<SysMenu> {
+        var list: List<SysMenu> = arrayListOf()
 
-        val root: SysMenu = this.findRoot()
+        menus.forEach { menu ->
+            if (null != menu.parent && menu.parent?.equals(parent)!!) {
+                list += menu
+            }
 
-        val menus: List<SysMenu> = this.sort(this.findByParent(root))
+            menus.forEach innerLoop@ { child ->
+                if (null != child.parent && child.parent?.equals(menu)!!) {
+                    sort(menus, menu)
 
-        menus.forEach {
-            list.add(it)
-
-            if (CollectionUtils.isNotEmpty(it.childs)) {
-                list.addAll(it.childs!!)
+                    return@innerLoop
+                }
             }
         }
 
@@ -103,20 +115,22 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
     }
 
     /**
-     * 递归获得子菜单
+     * 获得子菜单列表
      * @param menus
      * @param parent
      * @return
      */
-    open internal fun getChilds(menus: Set<SysMenu>, parent: SysMenu): List<SysMenu> {
-        var list: LinkedList<SysMenu> = Lists.newLinkedList()
+    open internal fun getChilds(menus: List<SysMenu>, parent: SysMenu): List<SysMenu> {
+        var list: List<SysMenu> = listOf()
 
-        menus.filter { it.parent?.equals(parent)!! && it.isShow() }.forEach {
-            list.add(it)
+        menus.forEach {
+            if (null != it.parent && it.parent?.equals(parent)!! && it.isShow()) {
+                list += it
+            }
         }
 
-        if (CollectionUtils.isNotEmpty(list)) {
-            list.filter { StringUtils.isBlank(it.menuUrl) && it.isShow() }.forEach {
+        list.forEach {
+            if (StringUtils.isBlank(it.menuUrl) && it.isShow()) {
                 it.childs = getChilds(menus, it).toSet()
             }
         }
@@ -125,30 +139,7 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
             return emptyList()
         }
 
-        list.sortBy { it.sort }
-
-        return list
-    }
-
-    /**
-     * 对菜单进行排序
-     * @param menus
-     * @return
-     */
-    open internal fun sort(menus: List<SysMenu>): List<SysMenu> {
-        var list: LinkedList<SysMenu> = Lists.newLinkedList()
-
-        menus.sortedBy { it.sort }.forEach {
-            if (CollectionUtils.isNotEmpty(it.childs)) {
-                it.childs?.sortedBy { it.sort }
-
-                list.add(it)
-            } else {
-                list.add(it)
-            }
-        }
-
-        return list
+        return list.sortedBy { it.sort }
     }
 
 }

@@ -20,7 +20,10 @@
 package org.lijun.common.authority.audit
 
 import org.lijun.common.authority.entity.SysUser
+import org.lijun.common.authority.service.SysUserService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.AuditorAware
+import org.springframework.stereotype.Component
 
 /**
  * AuditorAware - SysUserAuditorAware
@@ -28,10 +31,14 @@ import org.springframework.data.domain.AuditorAware
  * @author lijun
  * @constructor
  */
+@Component
 open class SysUserAuditorAware : AuditorAware<SysUser> {
 
+    @Autowired
+    private lateinit var sysUserService: SysUserService
+
     override fun getCurrentAuditor(): SysUser {
-        return SysUser()
+        return this.sysUserService.findByUsername("admin")!!
     }
 
 }

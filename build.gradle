@@ -13,6 +13,8 @@ buildscript {
         p6spy_version = '2.1.2'
         // 前端相关js库版本
         jquery_version = '1.9.1'
+        // SpringBoot版本
+        springboot_version = '1.5.2.RELEASE'
     }
 
     repositories {
@@ -39,6 +41,7 @@ dependencies {
     compile "p6spy:p6spy:$p6spy_version"
     compile "mysql:mysql-connector-java:$mysql_connector_version"
     compile "org.lijun.webjars:jquery:$jquery_version"
+    compile "org.springframework.boot:spring-boot-devtools:$springboot_version"
 }
 
 compileKotlin {
