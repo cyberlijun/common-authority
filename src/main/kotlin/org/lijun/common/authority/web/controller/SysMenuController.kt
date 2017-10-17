@@ -21,12 +21,12 @@ package org.lijun.common.authority.web.controller
 
 import org.lijun.common.authority.entity.SysMenu
 import org.lijun.common.authority.service.SysMenuService
+import org.lijun.common.vo.JsonResult
 import org.lijun.common.web.controller.BaseController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.*
 
 /**
  * Controller - SysMenuController
@@ -53,6 +53,38 @@ open class SysMenuController : BaseController() {
         model.addAttribute("menus", menus)
 
         return "admin/sys_menu/list"
+    }
+
+    /**
+     * 转发到添加菜单页面
+     * @param parent
+     * @param model
+     * @return
+     */
+    @GetMapping("add")
+    open fun add(@RequestParam(required = false) parentId: Long?, model: Model): String {
+        val parent: SysMenu = if (null != parentId) {
+            this.sysMenuService.findById(parentId!!)
+        } else {
+            this.sysMenuService.findRoot()
+        }
+
+        model.addAttribute("parent", parent)
+
+        return "admin/sys_menu/add"
+    }
+
+    /**
+     * 添加菜单
+     * @param menu
+     * @return
+     */
+    @PostMapping("add")
+    @ResponseBody
+    open fun add(menu: SysMenu): JsonResult {
+        this.sysMenuService.save(menu)
+
+        return success()
     }
 
 }

@@ -12,7 +12,27 @@ buildscript {
         mysql_connector_version = '5.1.10'
         p6spy_version = '2.1.2'
         // 前端相关js库版本
+        html5shiv_version = '3.7.0'
+        respond_version = '1.4.2'
+        hui_version = '3.1.4'
+        hui_admin_version = '3.1'
+        hui_iconfont_version = '1.0.8'
         jquery_version = '1.9.1'
+        jquery_icheck_version = '1.0.2'
+        syntax_highlighter_version = '3.0.83'
+        mask_version = '1.0'
+        dd_belatedPNG_version = '0.08a'
+        layer_version = '2.4'
+        jquery_validation_version = '1.14.0'
+        jquery_form_version = '3.51.0'
+        My97DatePicker_version = '4.8'
+        jquery_datatables_version = '1.10.0'
+        jquery_serializeObject_version = '1.0'
+        jquery_treetable_version = '3.2.0'
+        jquery_showLoading_version = '1.0'
+        zTree_version = '3.5.29'
+        common_authority_version = '1.0'
+        fontIconPicker_version = '2.0.0'
         // SpringBoot版本
         springboot_version = '1.5.2.RELEASE'
     }
@@ -41,6 +61,26 @@ dependencies {
     compile "p6spy:p6spy:$p6spy_version"
     compile "mysql:mysql-connector-java:$mysql_connector_version"
     compile "org.lijun.webjars:jquery:$jquery_version"
+    compile "org.lijun.webjars:html5shiv:$html5shiv_version"
+    compile "org.lijun.webjars:respond:$respond_version"
+    compile "org.lijun.webjars:h-ui:$hui_version"
+    compile "org.lijun.webjars:hui-admin:$hui_admin_version"
+    compile "org.lijun.webjars:Hui-iconfont:$hui_iconfont_version"
+    compile "org.lijun.webjars:jquery-icheck:$jquery_icheck_version"
+    compile "org.lijun.webjars:syntax-highlighter:$syntax_highlighter_version"
+    compile "org.lijun.webjars:mask:$mask_version"
+    compile "org.lijun.webjars:DD_belatedPNG:$dd_belatedPNG_version"
+    compile "org.lijun.webjars:layer:$layer_version"
+    compile "org.lijun.webjars:jquery-validation:$jquery_validation_version"
+    compile "org.lijun.webjars:jquery-form:$jquery_form_version"
+    compile "org.lijun.webjars:My97DatePicker:$My97DatePicker_version"
+    compile "org.lijun.webjars:datatables:$jquery_datatables_version"
+    compile "org.lijun.webjars:jquery-serializeObject:$jquery_serializeObject_version"
+    compile "org.lijun.webjars:jquery-treetable:$jquery_treetable_version"
+    compile "org.lijun.webjars:jquery-showLoading:$jquery_showLoading_version"
+    compile "org.lijun.webjars:zTree:$zTree_version"
+    compile "org.lijun.webjars:fontIconPicker:$fontIconPicker_version"
+    compile "org.lijun.webjars:common-authority:$common_authority_version"
     compile "org.springframework.boot:spring-boot-devtools:$springboot_version"
 }
 

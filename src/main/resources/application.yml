@@ -44,3 +44,6 @@ server:
   error:
     whitelabel:
       enabled: false
+systemInfo:
+  name: XXX管理平台
+adminPath: /admin

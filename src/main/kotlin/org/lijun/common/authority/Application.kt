@@ -3,6 +3,7 @@ package org.lijun.common.authority
 import com.fasterxml.jackson.databind.ObjectMapper
 import freemarker.ext.beans.BeansWrapper
 import freemarker.ext.beans.BeansWrapperBuilder
+import org.lijun.common.freemarker.method.PropertyMethod
 import org.lijun.common.freemarker.shiro.ShiroTags
 import org.lijun.common.support.CustomObjectMapper
 import org.lijun.common.web.interceptor.LoggingInterceptor
@@ -32,8 +33,14 @@ open class Application : WebMvcConfigurerAdapter() {
     @Value("#{servletContext.contextPath}")
     private lateinit var ctx: String
 
+    @Value("\${adminPath:admin}")
+    private lateinit var adminPath: String
+
     @Autowired
     private lateinit var freeMarkerConfigurer: FreeMarkerConfigurer
+
+    @Autowired
+    private lateinit var propertyMethod: PropertyMethod
 
     @Bean
     @Primary
@@ -69,6 +76,8 @@ open class Application : WebMvcConfigurerAdapter() {
 
         val variables: Map<String, Any> = mapOf(
                 "ctx" to ctx,
+                "adminPath" to "$ctx$adminPath",
+                "property" to propertyMethod,
                 "shiro" to ShiroTags(wrapper)
         )
 

@@ -50,11 +50,13 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
 
     @Transactional(readOnly = true)
     override fun findAll(): List<SysMenu> {
+        val list: MutableList<SysMenu> = mutableListOf()
+
         val menus: List<SysMenu> = this.sysMenuRepository.findAll()
 
         val root: SysMenu = this.findRoot()
 
-        return this.sort(menus, root)
+        return this.sort(list, menus, root)
     }
 
     @Transactional(readOnly = true)
@@ -90,23 +92,20 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
 
     /**
      * 对菜单进行排序
+     * @param list
      * @param menus
      * @param parent
      * @return
      */
-    open internal fun sort(menus: List<SysMenu>, parent: SysMenu): List<SysMenu> {
-        var list: List<SysMenu> = arrayListOf()
-
+    open internal fun sort(list: MutableList<SysMenu>, menus: List<SysMenu>, parent: SysMenu): List<SysMenu> {
         menus.forEach { menu ->
             if (null != menu.parent && menu.parent?.equals(parent)!!) {
                 list += menu
-            }
 
-            menus.forEach innerLoop@ { child ->
-                if (null != child.parent && child.parent?.equals(menu)!!) {
-                    sort(menus, menu)
-
-                    return@innerLoop
+                menus.forEach { child ->
+                    if (null != child.parent && child.parent?.equals(menu)!!) {
+                        sort(list, menus, menu)
+                    }
                 }
             }
         }
