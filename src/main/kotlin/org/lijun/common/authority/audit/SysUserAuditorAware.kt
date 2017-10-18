@@ -22,6 +22,8 @@ package org.lijun.common.authority.audit
 import org.lijun.common.authority.entity.SysUser
 import org.lijun.common.authority.service.SysUserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationListener
+import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.data.domain.AuditorAware
 import org.springframework.stereotype.Component
 
@@ -32,13 +34,27 @@ import org.springframework.stereotype.Component
  * @constructor
  */
 @Component
-open class SysUserAuditorAware : AuditorAware<SysUser> {
+open class SysUserAuditorAware : AuditorAware<SysUser>, ApplicationListener<ContextRefreshedEvent> {
+
+    // 以下代码是在没有集成Shiro时的临时解决方案，打包前去掉相关代码
+
+    private var initializeComplete: Boolean = false
+
+    private var sysUser: SysUser? = null
+
+    override fun onApplicationEvent(event: ContextRefreshedEvent?) {
+        if (initializeComplete.not()) {
+            this.sysUser = this.sysUserService.findByUsername("admin")
+
+            initializeComplete = true
+        }
+    }
 
     @Autowired
     private lateinit var sysUserService: SysUserService
 
-    override fun getCurrentAuditor(): SysUser {
-        return this.sysUserService.findByUsername("admin")!!
+    override fun getCurrentAuditor(): SysUser? {
+        return this.sysUser
     }
 
 }

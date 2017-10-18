@@ -113,7 +113,15 @@
             }
             
             function edit(id) {
-                
+                var url = "${adminPath}/menu/edit?id=" + id;
+
+                var index = layer.open({
+                    type: 2,
+                    title: '编辑菜单',
+                    content: url
+                });
+
+                layer.full(index);
             }
             
             function remove() {

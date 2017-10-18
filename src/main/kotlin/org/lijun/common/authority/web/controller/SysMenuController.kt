@@ -21,6 +21,7 @@ package org.lijun.common.authority.web.controller
 
 import org.lijun.common.authority.entity.SysMenu
 import org.lijun.common.authority.service.SysMenuService
+import org.lijun.common.util.ObjectUtils
 import org.lijun.common.vo.JsonResult
 import org.lijun.common.web.controller.BaseController
 import org.springframework.beans.factory.annotation.Autowired
@@ -83,6 +84,51 @@ open class SysMenuController : BaseController() {
     @ResponseBody
     open fun add(menu: SysMenu): JsonResult {
         this.sysMenuService.save(menu)
+
+        return success()
+    }
+
+    /**
+     * 转发到菜单编辑页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("edit")
+    open fun edit(id: Long, model: Model): String {
+        val menu: SysMenu = this.sysMenuService.findById(id)
+
+        model.addAttribute("menu", menu)
+
+        return "admin/sys_menu/edit"
+    }
+
+    /**
+     * 修改菜单
+     * @param menu
+     * @return
+     */
+    @PostMapping("update")
+    @ResponseBody
+    open fun update(menu: SysMenu): JsonResult {
+        val target: SysMenu = this.sysMenuService.findById(menu.id!!)
+
+        ObjectUtils.copyProperties(target, menu)
+
+        this.sysMenuService.save(target)
+
+        return success()
+    }
+
+    /**
+     * 删除菜单
+     * @param id
+     * @return
+     */
+    @PostMapping("delete")
+    @ResponseBody
+    open fun delete(id: Long): JsonResult {
+        this.sysMenuService.delete(id)
 
         return success()
     }
