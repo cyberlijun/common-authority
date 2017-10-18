@@ -124,8 +124,28 @@
                 layer.full(index);
             }
             
-            function remove() {
-                
+            function remove(childsNum, id) {
+                if (0 != childsNum) {
+                    warningMsg('该菜单下还有子菜单，不能进行删除操作！');
+
+                    return;
+                }
+
+                confirmMsg('确认要删除该菜单么？', function(index) {
+                    layer.close(index);
+
+                    ajaxSubmit("${adminPath}/menu/delete.json", {
+                        id: id
+                    }, function(returnData) {
+                        if ("success" == returnData.status) {
+                            successMsg('菜单已删除', function() {
+                                location.replace(location.href);
+                            });
+                        } else {
+                            errorMsg(returnData.message, false);
+                        }
+                    });
+                }, null);
             }
         </script>
     </body>

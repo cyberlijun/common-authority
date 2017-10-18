@@ -19,6 +19,9 @@
 
 package org.lijun.common.authority.web.controller
 
+import freemarker.template.Configuration
+import freemarker.template.SimpleScalar
+import org.apache.commons.lang3.StringUtils
 import org.lijun.common.authority.entity.SysMenu
 import org.lijun.common.authority.service.SysMenuService
 import org.lijun.common.util.ObjectUtils
@@ -28,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer
 
 /**
  * Controller - SysMenuController
@@ -38,6 +42,9 @@ import org.springframework.web.bind.annotation.*
 @Controller
 @RequestMapping("\${adminPath:admin}/menu")
 open class SysMenuController : BaseController() {
+
+    @Autowired
+    private lateinit var freeMarkerConfigurer: FreeMarkerConfigurer
 
     @Autowired
     private lateinit var sysMenuService: SysMenuService
@@ -58,7 +65,7 @@ open class SysMenuController : BaseController() {
 
     /**
      * 转发到添加菜单页面
-     * @param parent
+     * @param parentId
      * @param model
      * @return
      */
@@ -83,6 +90,8 @@ open class SysMenuController : BaseController() {
     @PostMapping("add")
     @ResponseBody
     open fun add(menu: SysMenu): JsonResult {
+        resolveMenuUrl(menu)
+
         this.sysMenuService.save(menu)
 
         return success()
@@ -115,6 +124,8 @@ open class SysMenuController : BaseController() {
 
         ObjectUtils.copyProperties(target, menu)
 
+        resolveMenuUrl(target)
+
         this.sysMenuService.save(target)
 
         return success()
@@ -131,6 +142,22 @@ open class SysMenuController : BaseController() {
         this.sysMenuService.delete(id)
 
         return success()
+    }
+
+    /**
+     * 解析菜单URL中的${adminPath}
+     * @param menu
+     */
+    private fun resolveMenuUrl(menu: SysMenu) {
+        if (StringUtils.isNotBlank(menu.menuUrl) && menu.menuUrl!!.contains("\${adminPath}")) {
+            val cfg: Configuration = freeMarkerConfigurer.configuration
+
+            val variable: SimpleScalar? = cfg.getSharedVariable("adminPath") as SimpleScalar?
+
+            if (null != variable) {
+                menu.menuUrl = StringUtils.replace(menu.menuUrl, "\${adminPath}", variable.toString())
+            }
+        }
     }
 
 }
