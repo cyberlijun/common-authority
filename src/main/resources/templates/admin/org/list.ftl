@@ -4,7 +4,7 @@
         <#include "../include/header.ftl">
         <link href="${ctx}/webjars/jquery-treetable/3.2.0/css/jquery.treetable.css" rel="stylesheet">
         <link href="${ctx}/webjars/jquery-treetable/3.2.0/css/jquery.treetable.theme.default.css" rel="stylesheet">
-        <title>${property("systemInfo.name")}-区域管理</title>
+        <title>${property("systemInfo.name")}-机构管理</title>
     </head>
     <body>
         <nav class="breadcrumb">
@@ -12,8 +12,8 @@
             首页 <span class="c-gray en">&gt;</span>
             <i class="Hui-iconfont Hui-iconfont-system"></i>
             系统管理 <span class="c-gray en">&gt;</span>
-            <i class="Hui-iconfont Hui-iconfont-home"></i>
-            区域管理
+            <i class="Hui-iconfont Hui-iconfont-gongsi"></i>
+            机构管理
             <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
                 <i class="Hui-iconfont">&#xe68f;</i>
             </a>
@@ -23,8 +23,8 @@
                 <div class="panel-header">
                     <div class="row cl">
                         <div class="col-xs-12 col-sm-12">
-                            <i class="Hui-iconfont Hui-iconfont-home"></i>
-                            区域列表
+                            <i class="Hui-iconfont Hui-iconfont-gongsi"></i>
+                            机构列表
                             <span class="r">
                                 <button id="btnAdd" type="button" class="btn btn-primary radius size-S">
                                     <i class="Hui-iconfont Hui-iconfont-add"></i>添加
@@ -37,25 +37,41 @@
                     <div class="row cl">
                         <table id="listTable" class="table table-border table-bordered table-hover table-bg table-striped">
                             <thead>
-                                <tr class="text-c">
-                                    <th>区域编码</th>
-                                    <th>区域名称</th>
-                                    <th>操作</th>
-                                </tr>
+                            <tr class="text-c">
+                                <th>所属区域</th>
+                                <th>机构编码</th>
+                                <th>机构名称</th>
+                                <th>联系地址</th>
+                                <th>邮编</th>
+                                <th>负责人</th>
+                                <th>联系电话</th>
+                                <th>传真</th>
+                                <th>邮箱</th>
+                                <th>操作</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <#list areas as area>
-                                <tr class="text-c" data-tt-id="${area.id}" <#if area.parent.id gt 1>data-tt-parent-id="${area.parent.id}"</#if>>
-                                    <td class="text-c">${area.code!''}</td>
-                                    <td class="text-c">${area.name!''}</td>
+                                <#list orgs as org>
+                                <tr class="text-c" data-tt-id="${org.id}" <#if org.parent.id gt 1>data-tt-parent-id="${org.parent.id}"</#if>>
                                     <td class="text-c">
-                                        <a title="添加" href="javascript:;" onclick="javascript:add(${area.id}, '添加下级区域');" style="text-decoration:none">
+                                        <#if org.area??>${org.area.name!''}</#if>
+                                    </td>
+                                    <td class="text-c">${org.code!''}</td>
+                                    <td class="text-c">${org.name!''}</td>
+                                    <td class="text-c">${org.address!''}</td>
+                                    <td class="text-c">${org.zipCode!''}</td>
+                                    <td class="text-c">${org.master!''}</td>
+                                    <td class="text-c">${org.phone!''}</td>
+                                    <td class="text-c">${org.fax!''}</td>
+                                    <td class="text-c">${org.email!''}</td>
+                                    <td class="text-c">
+                                        <a title="添加" href="javascript:;" onclick="javascript:add(${org.id}, '添加下级机构');" style="text-decoration:none">
                                             <i class="Hui-iconfont Hui-iconfont-add"></i>
                                         </a>
-                                        <a title="编辑" href="javascript:;" onclick="javascript:edit(${area.id});" style="text-decoration:none">
+                                        <a title="编辑" href="javascript:;" onclick="javascript:edit(${org.id});" style="text-decoration:none">
                                             <i class="Hui-iconfont Hui-iconfont-edit"></i>
                                         </a>
-                                        <a title="删除" href="javascript:;" onclick="javascript:remove(${area.childs?size}, ${area.id});" style="text-decoration:none">
+                                        <a title="删除" href="javascript:;" onclick="javascript:remove(${org.childs?size}, ${org.id});" style="text-decoration:none">
                                             <i class="Hui-iconfont Hui-iconfont-del3"></i>
                                         </a>
                                     </td>
@@ -80,12 +96,12 @@
                 });
 
                 $btnAdd.on('click', function (e) {
-                    add('', '添加区域');
+                    add('', '添加机构');
                 });
             });
 
             function add(pid, title) {
-                var url = "${adminPath}/area/add";
+                var url = "${adminPath}/org/add";
 
                 if (pid) {
                     url += "?parentId=" + pid;
@@ -101,11 +117,11 @@
             }
 
             function edit(id) {
-                var url = "${adminPath}/area/edit?id=" + id;
+                var url = "${adminPath}/org/edit?id=" + id;
 
                 var index = layer.open({
                     type: 2,
-                    title: '编辑区域',
+                    title: '编辑机构',
                     content: url
                 });
 
@@ -114,19 +130,19 @@
 
             function remove(childsNum, id) {
                 if (0 != childsNum) {
-                    warningMsg('该区域下还有下级区域，不能进行删除操作！');
+                    warningMsg('该机构下还有下级机构，不能进行删除操作！');
 
                     return;
                 }
 
-                confirmMsg('确认要删除该区域么？', function(index) {
+                confirmMsg('确认要删除该机构么？', function(index) {
                     layer.close(index);
 
-                    ajaxSubmit("${adminPath}/area/delete.json", {
+                    ajaxSubmit("${adminPath}/org/delete.json", {
                         id: id
                     }, function(returnData) {
                         if ("success" == returnData.status) {
-                            successMsg('区域已删除', function() {
+                            successMsg('机构已删除', function() {
                                 location.replace(location.href);
                             });
                         } else {

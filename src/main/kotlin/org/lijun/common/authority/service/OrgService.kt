@@ -17,31 +17,37 @@
  * limitations under the License.
  */
 
-package org.lijun.common.authority.repository
+package org.lijun.common.authority.service
 
-import org.lijun.common.authority.entity.Area
-import org.lijun.common.repository.BaseRepository
-import org.springframework.data.jpa.repository.Query
+import org.lijun.common.authority.entity.Org
+import org.lijun.common.service.BaseService
 
 /**
- * Repository - AreaRepository
+ * Service - OrgService
  *
  * @author lijun
  */
-interface AreaRepository : BaseRepository<Area, Long> {
+interface OrgService : BaseService<Org, Long> {
 
     /**
-     * 查询根节点地区
+     * 查询根节点机构
      * @return
      */
-    @Query("select area from Area area where area.id = 1")
-    fun findRoot(): Area
+    fun findRoot(): Org
 
     /**
-     * 根据区域编码查询
+     * 根据机构编码查询机构
      * @param code
      * @return
      */
-    fun findByCode(code: String): Area?
+    fun findByCode(code: String): Org?
+
+    /**
+     * 校验机构编码是否存在
+     * @param oldCode
+     * @param code
+     * @return
+     */
+    fun checkCode(oldCode: String?, code: String): Boolean
 
 }

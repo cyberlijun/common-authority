@@ -37,4 +37,11 @@ interface OrgRepository : BaseRepository<Org, Long> {
     @Query("select org from Org org where org.id = 1")
     fun findRoot(): Org
 
+    /**
+     * 根据机构编码查询机构
+     * @param code
+     * @return
+     */
+    fun findByCode(code: String): Org?
+
 }

@@ -43,13 +43,6 @@ interface AreaService : BaseService<Area, Long> {
     fun findByCode(code: String): Area?
 
     /**
-     * 根据区域名称查询
-     * @param name
-     * @return
-     */
-    fun findByName(name: String): Area?
-
-    /**
      * 校验区域编码是否存在
      * @param oldCode
      * @param code
