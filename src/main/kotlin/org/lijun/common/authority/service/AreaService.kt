@@ -17,24 +17,22 @@
  * limitations under the License.
  */
 
-package org.lijun.common.authority.repository
+package org.lijun.common.authority.service
 
 import org.lijun.common.authority.entity.Area
-import org.lijun.common.repository.BaseRepository
-import org.springframework.data.jpa.repository.Query
+import org.lijun.common.service.BaseService
 
 /**
- * Repository - AreaRepository
+ * Service - AreaService
  *
  * @author lijun
  */
-interface AreaRepository : BaseRepository<Area, Long> {
+interface AreaService : BaseService<Area, Long> {
 
     /**
      * 查询根节点地区
      * @return
      */
-    @Query("select area from Area area where area.id = 1")
     fun findRoot(): Area
 
     /**
@@ -50,5 +48,13 @@ interface AreaRepository : BaseRepository<Area, Long> {
      * @return
      */
     fun findByName(name: String): Area?
+
+    /**
+     * 校验区域编码是否存在
+     * @param oldCode
+     * @param code
+     * @return
+     */
+    fun checkCode(oldCode: String?, code: String): Boolean
 
 }

@@ -56,7 +56,7 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
 
         val root: SysMenu = this.findRoot()
 
-        return this.sort(list, menus, root)
+        return this.buildTree(menus, root)
     }
 
     @Transactional(readOnly = true)
@@ -91,22 +91,23 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
     }
 
     /**
-     * 对菜单进行排序
-     * @param list
+     * 使用递归创建树形结构
      * @param menus
      * @param parent
      * @return
      */
-    open internal fun sort(list: MutableList<SysMenu>, menus: List<SysMenu>, parent: SysMenu): List<SysMenu> {
-        menus.forEach { menu ->
-            if (null != menu.parent && menu.parent?.equals(parent)!!) {
-                list += menu
+    open internal fun buildTree(menus: List<SysMenu>, parent: SysMenu): List<SysMenu> {
+        val list: MutableList<SysMenu> = mutableListOf()
 
-                menus.forEach { child ->
-                    if (null != child.parent && child.parent?.equals(menu)!!) {
-                        sort(list, menus, menu)
-                    }
-                }
+        menus.forEach {
+            if (null == it.parent) {
+                return@forEach
+            }
+
+            if (it.parent?.equals(parent)!!) {
+                list.add(it)
+
+                list.addAll(buildTree(menus, it))
             }
         }
 
