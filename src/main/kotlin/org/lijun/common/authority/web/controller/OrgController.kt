@@ -24,6 +24,7 @@ import org.lijun.common.authority.entity.Org
 import org.lijun.common.authority.service.AreaService
 import org.lijun.common.authority.service.OrgService
 import org.lijun.common.vo.JsonResult
+import org.lijun.common.util.ObjectUtils
 import org.lijun.common.web.controller.BaseController
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -74,10 +75,9 @@ open class OrgController : BaseController() {
             this.orgService.findById(parentId)
         }
 
-        val areas: List<Area> = this.areaService.findAll()
+        loadAreas(model)
 
         model.addAttribute("parent", parent)
-        model.addAttribute("areas", areas)
 
         return "admin/org/add"
     }
@@ -96,6 +96,53 @@ open class OrgController : BaseController() {
     }
 
     /**
+     * 转发到编辑页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("edit")
+    open fun edit(id: Long, model: Model): String {
+        val org: Org = this.orgService.findById(id)
+
+        loadAreas(model)
+
+        model.addAttribute("org", org)
+
+        return "admin/org/edit"
+    }
+
+    /**
+     * 修改机构信息
+     * @param org
+     * @return
+     */
+    @PostMapping("update")
+    @ResponseBody
+    open fun update(org: Org): JsonResult {
+        val target: Org = this.orgService.findById(org.id!!)
+
+        ObjectUtils.copyProperties(target, org)
+
+        this.orgService.save(target)
+
+        return success()
+    }
+
+    /**
+     * 删除机构
+     * @param id
+     * @return
+     */
+    @PostMapping("delete")
+    @ResponseBody
+    open fun delete(id: Long): JsonResult {
+        this.orgService.delete(id)
+
+        return success()
+    }
+
+    /**
      * 校验机构编码是否存在
      * @param oldCode
      * @param code
@@ -105,6 +152,17 @@ open class OrgController : BaseController() {
     @ResponseBody
     open fun checkCode(@RequestParam(required = false) oldCode: String?, code: String): Boolean {
         return this.orgService.checkCode(oldCode, code)
+    }
+
+    /**
+     * 加载区域信息
+     * @param model
+     * @return
+     */
+    private fun loadAreas(model: Model) {
+        val areas: List<Area> = this.areaService.findAll()
+
+        model.addAttribute("areas", areas)
     }
 
 }
