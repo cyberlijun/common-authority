@@ -24,6 +24,7 @@ import org.hibernate.annotations.DynamicUpdate
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
 import javax.persistence.*
+import org.apache.commons.codec.digest.DigestUtils
 
 /**
  * Entity - SysUser
@@ -93,5 +94,11 @@ class SysUser : UserAuditingEntity() {
      */
     @Column(name = "[status]", columnDefinition = "INT(1) COMMENT '状态'")
     var status: SysUser.Status = SysUser.Status.NORMAL
+
+    @PrePersist
+    fun prePersist() {
+        this.password = DigestUtils.md5Hex(this.password)
+        this.status = SysUser.Status.NORMAL
+    }
 
 }

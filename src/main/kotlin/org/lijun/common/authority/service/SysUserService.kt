@@ -58,4 +58,19 @@ interface SysUserService : BaseService<SysUser, Long> {
      */
     fun findPage(condition: SysUserQueryCondition): DataTable<SysUser>
 
+    /**
+     * 校验用户名是否存在
+     * @param oldUsername
+     * @param username
+     */
+    fun checkUsername(oldUsername: String?, username: String): Boolean
+
+    /**
+     * 校验邮箱是否存在
+     * @param oldEmail
+     * @param email
+     * @return
+     */
+    fun checkEmail(oldEmail: String?, email: String): Boolean
+
 }

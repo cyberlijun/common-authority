@@ -106,4 +106,22 @@ open class SysUserServiceImpl(repository: SysUserRepository) : BaseServiceImpl<S
         return this.findPage(condition, specification, sort)
     }
 
+    @Transactional(readOnly = true)
+    override fun checkUsername(oldUsername: String?, username: String): Boolean {
+        return if (StringUtils.equalsIgnoreCase(oldUsername, username)) {
+            true
+        } else {
+            null == this.sysUserRepository.findByUsername(username)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    override fun checkEmail(oldEmail: String?, email: String): Boolean {
+        return if (StringUtils.equalsIgnoreCase(oldEmail, email)) {
+            true
+        } else {
+            null == this.sysUserRepository.findByEmail(email)
+        }
+    }
+
 }
