@@ -198,8 +198,8 @@
                                 type: 'post',
                                 cache: false,
                                 data: {
-                                    name: function () { return $('#name').prop('value') },
-                                    orgId: function () { return $orgId.prop('value') }
+                                    name: function () { return $('#name').prop('value'); },
+                                    orgId: function () { return $orgId.prop('value'); }
                                 }
                             }
                         }

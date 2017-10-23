@@ -26,6 +26,7 @@ import org.lijun.common.authority.querycondition.RoleQueryCondition
 import org.lijun.common.authority.service.OrgService
 import org.lijun.common.authority.service.RoleService
 import org.lijun.common.authority.service.SysMenuService
+import org.lijun.common.util.ObjectUtils
 import org.lijun.common.vo.DataTable
 import org.lijun.common.vo.JsonResult
 import org.lijun.common.web.controller.BaseController
@@ -94,17 +95,7 @@ open class RoleController : BaseController() {
     @PostMapping("add")
     @ResponseBody
     open fun add(role: Role, @RequestParam("menuIds[]") menuIds: Array<Long>): JsonResult {
-        var menus: Set<SysMenu> = setOf()
-
-        menuIds.forEach {
-            val menu: SysMenu = SysMenu()
-
-            menu.id = it
-
-            menus += menu
-        }
-
-        role.menus = menus
+        setRoleMenus(role, menuIds)
 
         this.roleService.save(role)
 
@@ -156,6 +147,39 @@ open class RoleController : BaseController() {
     }
 
     /**
+     * 修改角色
+     * @param role
+     * @param menuIds
+     * @return
+     */
+    @PostMapping("update")
+    @ResponseBody
+    open fun update(role: Role, @RequestParam("menuIds[]") menuIds: Array<Long>): JsonResult {
+        val target: Role = this.roleService.findById(role.id!!)
+
+        ObjectUtils.copyProperties(target, role)
+
+        setRoleMenus(target, menuIds)
+
+        this.roleService.save(target)
+
+        return success()
+    }
+
+    /**
+     * 删除角色
+     * @param id
+     * @return
+     */
+    @PostMapping("delete")
+    @ResponseBody
+    open fun delete(id: Long): JsonResult {
+        this.roleService.delete(id)
+
+        return success()
+    }
+
+    /**
      * 加载机构列表
      * @param model
      */
@@ -173,6 +197,25 @@ open class RoleController : BaseController() {
         val menus: List<SysMenu> = this.sysMenuService.findAll()
 
         model.addAttribute("menus", menus)
+    }
+
+    /**
+     * 设置角色菜单
+     * @param role
+     * @param menuIds
+     */
+    private fun setRoleMenus(role: Role, menuIds: Array<Long>) {
+        var menus: Set<SysMenu> = setOf()
+
+        menuIds.forEach {
+            val menu: SysMenu = SysMenu()
+
+            menu.id = it
+
+            menus += menu
+        }
+
+        role.menus = menus
     }
 
 }

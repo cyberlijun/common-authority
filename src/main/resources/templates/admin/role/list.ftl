@@ -283,6 +283,42 @@
                     </#if>
                 });
             });
+
+            function edit(id) {
+                var url = "${adminPath}/role/edit?id=" + id;
+
+                var index = layer.open({
+                    type: 2,
+                    title: '编辑角色',
+                    content: url
+                });
+
+                layer.full(index);
+            }
+
+            function del(userCount, id) {
+                if (0 !== userCount) {
+                    warningMsg('该角色下还绑定有管理员，不能进行删除操作！');
+
+                    return;
+                }
+
+                confirmMsg('确认要删除该角色么？', function(index) {
+                    ajaxSubmit("${adminPath}/role/delete.json", {
+                        id: id
+                    }, function(returnData) {
+                        layer.close(index);
+
+                        if ("success" == returnData.status) {
+                            successMsg('角色已删除', function() {
+                                location.replace(location.href);
+                            });
+                        } else {
+                            errorMsg(returnData.message, false);
+                        }
+                    });
+                }, null);
+            }
         </script>
     </body>
 </html>
