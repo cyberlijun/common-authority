@@ -116,7 +116,7 @@ open class SysLogServiceImpl(repository: SysLogRepository) : BaseServiceImpl<Sys
             var restrictions: Predicate = cb!!.conjunction()
 
             if (StringUtils.isNotBlank(condition.username)) {
-                val user = this.sysUserService.findByUsername(condition.username!!)
+                val user: SysUser? = this.sysUserService.findByUsername(condition.username!!)
 
                 if (null != user) {
                     val join: Join<SysLog, SysUser> = root.join("createUser", JoinType.INNER)

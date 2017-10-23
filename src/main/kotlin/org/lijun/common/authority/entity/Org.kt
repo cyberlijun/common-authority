@@ -19,6 +19,7 @@
 
 package org.lijun.common.authority.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.*
 import javax.persistence.*
 import javax.persistence.Entity
@@ -47,12 +48,14 @@ class Org : UserAuditingEntity() {
     /**
      * 机构编码
      */
+    @JsonProperty
     @Column(name = "[code]", columnDefinition = "VARCHAR(100) COMMENT '机构编码'")
     var code: String? = null
 
     /**
      * 机构名称
      */
+    @JsonProperty
     @Column(name = "[name]", columnDefinition = "VARCHAR(100) COMMENT '机构名称'")
     var name: String? = null
 

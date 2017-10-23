@@ -17,25 +17,36 @@
  * limitations under the License.
  */
 
-package org.lijun.common.authority.repository
+package org.lijun.common.authority.service
 
 import org.lijun.common.authority.entity.Org
 import org.lijun.common.authority.entity.Role
-import org.lijun.common.repository.BaseRepository
+import org.lijun.common.authority.querycondition.RoleQueryCondition
+import org.lijun.common.service.BaseService
+import org.lijun.common.vo.DataTable
 
 /**
- * Repository - RoleRepository
+ * Service - RoleService
  *
  * @author lijun
  */
-interface RoleRepository : BaseRepository<Role, Long> {
+interface RoleService : BaseService<Role, Long> {
 
     /**
-     * 根据角色名称和机构查询角色
+     * 校验角色名称是否存在
+     * @param oldName
      * @param name
+     * @param oldOrg
      * @param org
      * @return
      */
-    fun findByNameAndOrg(name: String, org: Org): Role?
+    fun checkName(oldName: String?, name: String, oldOrg: Org?, org: Org): Boolean
+
+    /**
+     * 分页查询角色
+     * @param condition
+     * @return
+     */
+    fun findPage(condition: RoleQueryCondition): DataTable<Role>
 
 }

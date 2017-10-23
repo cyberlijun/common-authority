@@ -150,7 +150,9 @@
                         view: {
                             dblClickExpand: false,
                             selectedMulti: false,
-                            showLine: false
+                            showLine: false,
+                            showIcon: false,
+                            nameIsHTML: true
                         },
                         data: {
                             simpleData: {
@@ -162,7 +164,7 @@
                         },
                         callback: {
                             onCheck: function(event, treeId, treeNode) {
-                                $areaName.prop("value", treeNode.name);
+                                $areaName.prop("value", treeNode.name.replace(/<[^>]+>/g, ""));
                                 $areaId.prop("value", treeNode.id);
 
                                 if (layerIndex) {
@@ -178,7 +180,7 @@
                         treeNodes.push({
                             id: ${area.id},
                             pId: ${area.parent.id},
-                            name: "${area.name}"
+                            name: "<i class='Hui-iconfont Hui-iconfont-home'>${area.name}</i>"
                         });
                     </#list>
 

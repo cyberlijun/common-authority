@@ -19,6 +19,7 @@
 
 package org.lijun.common.authority.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.*
 import javax.persistence.*
 import javax.persistence.Entity
@@ -36,9 +37,11 @@ import javax.persistence.Table
 @DynamicUpdate
 class Role : UserAuditingEntity() {
 
+    @JsonProperty
     @Column(name = "[name]", columnDefinition = "VARCHAR(100) COMMENT '角色名称'")
     var name: String? = null
 
+    @JsonProperty
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id", columnDefinition = "BIGINT(10) COMMENT '所属机构ID'")
     @NotFound(action = NotFoundAction.IGNORE)
@@ -48,7 +51,7 @@ class Role : UserAuditingEntity() {
      * 菜单列表
      */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "sys_role_menu",
+    @JoinTable(name = "tb_sys_role_menu",
                 joinColumns = arrayOf(JoinColumn(name = "role_id", columnDefinition = "BIGINT(10) COMMENT '角色ID'")),
                 inverseJoinColumns = arrayOf(JoinColumn(name = "menu_id", columnDefinition = "BIGINT(10) COMMENT '菜单ID'")))
     @NotFound(action = NotFoundAction.IGNORE)
@@ -62,5 +65,12 @@ class Role : UserAuditingEntity() {
     @NotFound(action = NotFoundAction.IGNORE)
     @Fetch(FetchMode.SUBSELECT)
     var users: Set<SysUser>? = null
+
+    /**
+     * 统计该角色下用户数量
+     */
+    @JsonProperty
+    @Transient
+    fun userCount(): Int = this.users?.size ?: 0
 
 }

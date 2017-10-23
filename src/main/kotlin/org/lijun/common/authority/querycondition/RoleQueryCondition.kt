@@ -17,25 +17,27 @@
  * limitations under the License.
  */
 
-package org.lijun.common.authority.repository
+package org.lijun.common.authority.querycondition
 
 import org.lijun.common.authority.entity.Org
-import org.lijun.common.authority.entity.Role
-import org.lijun.common.repository.BaseRepository
+import org.lijun.common.querycondition.DataTableQueryCondition
 
 /**
- * Repository - RoleRepository
+ * 角色查询条件
  *
  * @author lijun
+ * @constructor
  */
-interface RoleRepository : BaseRepository<Role, Long> {
+class RoleQueryCondition : DataTableQueryCondition() {
 
     /**
-     * 根据角色名称和机构查询角色
-     * @param name
-     * @param org
-     * @return
+     * 角色名称
      */
-    fun findByNameAndOrg(name: String, org: Org): Role?
+    var name: String? = null
+
+    /**
+     * 所属机构
+     */
+    var org: Org? = null
 
 }
