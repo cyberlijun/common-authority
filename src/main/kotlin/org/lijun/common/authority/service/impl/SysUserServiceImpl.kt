@@ -83,7 +83,7 @@ open class SysUserServiceImpl(repository: SysUserRepository) : BaseServiceImpl<S
             if (null != condition.org) {
                 val join: Join<SysUser, Org> = root.join("org", JoinType.INNER)
 
-                restrictions = cb.and(restrictions, cb.equal(join.get<Long>("id"), condition.org!!.id))
+                restrictions = cb.and(restrictions, cb.equal(join.get<Long>("id"), condition.org?.id))
             }
 
             if (StringUtils.isNotBlank(condition.username)) {

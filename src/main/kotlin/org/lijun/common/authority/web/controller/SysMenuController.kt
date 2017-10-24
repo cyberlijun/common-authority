@@ -72,7 +72,7 @@ open class SysMenuController : BaseController() {
     @GetMapping("add")
     open fun add(@RequestParam(required = false) parentId: Long?, model: Model): String {
         val parent: SysMenu = if (null != parentId) {
-            this.sysMenuService.findById(parentId!!)
+            this.sysMenuService.findById(parentId)
         } else {
             this.sysMenuService.findRoot()
         }

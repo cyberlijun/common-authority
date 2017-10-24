@@ -50,8 +50,6 @@ open class SysMenuServiceImpl(repository: SysMenuRepository) : BaseServiceImpl<S
 
     @Transactional(readOnly = true)
     override fun findAll(): List<SysMenu> {
-        val list: MutableList<SysMenu> = mutableListOf()
-
         val menus: List<SysMenu> = this.sysMenuRepository.findAll()
 
         val root: SysMenu = this.findRoot()
