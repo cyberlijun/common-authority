@@ -19,12 +19,15 @@
 
 package org.lijun.common.authority.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
 import javax.persistence.*
 import org.apache.commons.codec.digest.DigestUtils
+import org.lijun.common.authority.serializer.SysUserStatusSerializer
 
 /**
  * Entity - SysUser
@@ -58,6 +61,7 @@ class SysUser : UserAuditingEntity() {
     /**
      * 所在机构
      */
+    @JsonProperty
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "org_id", columnDefinition = "BIGINT(10) COMMENT '所在机构ID'")
     @NotFound(action = NotFoundAction.IGNORE)
@@ -66,6 +70,7 @@ class SysUser : UserAuditingEntity() {
     /**
      * 角色
      */
+    @JsonProperty
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", columnDefinition = "BIGINT(10) COMMENT '角色ID'")
     @NotFound(action = NotFoundAction.IGNORE)
@@ -74,6 +79,7 @@ class SysUser : UserAuditingEntity() {
     /**
      * 登录用户名
      */
+    @JsonProperty
     @Column(columnDefinition = "VARCHAR(50) COMMENT '登录用户名'")
     var username: String? = null
 
@@ -86,12 +92,22 @@ class SysUser : UserAuditingEntity() {
     /**
      * 邮箱
      */
+    @JsonProperty
     @Column(columnDefinition = "VARCHAR(100) COMMENT '邮箱'")
     var email: String? = null
 
     /**
+     * 是否是超级管理员
+     */
+    @JsonProperty
+    @Column(columnDefinition = "TINYINT(1) COMMENT '是否是超级管理员'")
+    var superAdmin: Boolean? = null
+
+    /**
      * 状态
      */
+    @JsonProperty
+    @JsonSerialize(using = SysUserStatusSerializer::class)
     @Column(name = "[status]", columnDefinition = "INT(1) COMMENT '状态'")
     var status: SysUser.Status = SysUser.Status.NORMAL
 
@@ -99,6 +115,7 @@ class SysUser : UserAuditingEntity() {
     fun prePersist() {
         this.password = DigestUtils.md5Hex(this.password)
         this.status = SysUser.Status.NORMAL
+        this.superAdmin = false
     }
 
 }

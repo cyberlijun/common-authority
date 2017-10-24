@@ -80,7 +80,7 @@ open class SysUserServiceImpl(repository: SysUserRepository) : BaseServiceImpl<S
         val specification: Specification<SysUser> = Specification<SysUser> { root, _, cb ->
             var restrictions: Predicate = cb!!.conjunction()
 
-            if (null != condition.org) {
+            if (null != condition.org?.id) {
                 val join: Join<SysUser, Org> = root.join("org", JoinType.INNER)
 
                 restrictions = cb.and(restrictions, cb.equal(join.get<Long>("id"), condition.org?.id))

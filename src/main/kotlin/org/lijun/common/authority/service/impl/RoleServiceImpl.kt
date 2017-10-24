@@ -77,4 +77,9 @@ open class RoleServiceImpl(repository: RoleRepository) : BaseServiceImpl<Role, L
         return this.findPage(condition, specification)
     }
 
+    @Transactional(readOnly = true)
+    override fun findByOrg(org: Org): List<Role> {
+        return this.roleRepository.findByOrg(org)
+    }
+
 }

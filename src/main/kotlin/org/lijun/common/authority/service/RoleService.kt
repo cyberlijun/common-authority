@@ -49,4 +49,11 @@ interface RoleService : BaseService<Role, Long> {
      */
     fun findPage(condition: RoleQueryCondition): DataTable<Role>
 
+    /**
+     * 根据机构查询角色
+     * @param org
+     * @return
+     */
+    fun findByOrg(org: Org): List<Role>
+
 }

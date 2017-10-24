@@ -180,6 +180,21 @@ open class RoleController : BaseController() {
     }
 
     /**
+     * 根据机构查询角色
+     * @param orgId
+     * @return
+     */
+    @PostMapping("load_roles")
+    @ResponseBody
+    open fun loadRoles(orgId: Long): JsonResult {
+        val org: Org = this.orgService.findById(orgId)
+
+        val roles: List<Role> = this.roleService.findByOrg(org)
+
+        return success(roles)
+    }
+
+    /**
      * 加载机构列表
      * @param model
      */

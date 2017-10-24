@@ -37,9 +37,9 @@ class SysUserStatusSerializer : JsonSerializer<SysUser.Status>() {
         var text: String = StringUtils.EMPTY
 
         if (null != value) {
-            when (value) {
-                SysUser.Status.NORMAL -> text = "<span style='color: #00FF00'>正常</span>"
-                SysUser.Status.DISABLED -> text = "<span style='color: #FF0000'>停用</span>"
+            text = when (value) {
+                SysUser.Status.NORMAL -> "<span style='color: #00FF00'>正常</span>"
+                SysUser.Status.DISABLED -> "<span style='color: #FF0000'>停用</span>"
             }
         }
 
