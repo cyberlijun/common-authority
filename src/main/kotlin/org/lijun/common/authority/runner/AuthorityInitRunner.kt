@@ -19,10 +19,23 @@
 
 package org.lijun.common.authority.runner
 
+import org.apache.commons.io.IOUtils
+import org.apache.commons.lang3.StringUtils
+import org.apache.ibatis.jdbc.ScriptRunner
+import org.lijun.common.authority.entity.SystemConfig
+import org.lijun.common.authority.service.SystemConfigService
+import org.lijun.common.authority.util.AuthorityConstants
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
 import org.springframework.stereotype.Component
+import java.io.InputStream
+import java.io.StringReader
+import java.sql.Connection
+import javax.sql.DataSource
 
 /**
  * CommandLineRunner - AuthorityInitRunner
@@ -35,8 +48,58 @@ open class AuthorityInitRunner : CommandLineRunner {
 
     private val logger: Logger = LoggerFactory.getLogger(javaClass)
 
+    @Autowired
+    private lateinit var dataSource: DataSource
+
+    @Autowired
+    private lateinit var systemConfigService: SystemConfigService
+
     override fun run(vararg args: String?) {
-        logger.info("AuthorityInitRunner starting...")
+        val systemConfig: SystemConfig? = this.systemConfigService.findByCode(AuthorityConstants.AUTHORITY_INIT_COMPLETED_KEY)
+
+        if (null == systemConfig || systemConfig.value?.toBoolean()?.not()!!) {
+            logger.info("权限模块未初始化，开始初始化...")
+
+            init(dataSource)
+
+            logger.info("权限模块初始化完成...")
+        }
+    }
+
+    /**
+     * 执行初始化
+     * @param dataSource
+     */
+    open internal fun init(dataSource: DataSource) {
+        var input: InputStream? = null
+
+        try {
+            val connection: Connection = dataSource.connection
+
+            val database: String = connection.catalog
+
+            val resource: Resource = ClassPathResource(AuthorityConstants.AUTHORITY_INIT_SQL)
+
+            if (resource.exists() && resource.isReadable) {
+                input = resource.inputStream
+
+                val sql: String = StringUtils.replace(IOUtils.toString(input), "\${database}", database)
+
+                val scriptRunner: ScriptRunner = ScriptRunner(connection)
+
+                scriptRunner.runScript(StringReader(sql))
+
+                val systemConfig: SystemConfig? = this.systemConfigService.findByCode(AuthorityConstants.AUTHORITY_INIT_COMPLETED_KEY)
+
+                if (null != systemConfig && systemConfig.value?.toBoolean()?.not()!!) {
+                    systemConfig.value = "true"
+
+                    this.systemConfigService.save(systemConfig)
+                }
+            }
+        } finally {
+            IOUtils.closeQuietly(input)
+        }
     }
 
 }
