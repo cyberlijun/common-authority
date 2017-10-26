@@ -20,6 +20,7 @@
 package org.lijun.common.authority.repository
 
 import org.lijun.common.authority.entity.LoginLog
+import org.lijun.common.authority.entity.SysUser
 import org.lijun.common.repository.BaseRepository
 
 /**
@@ -27,4 +28,13 @@ import org.lijun.common.repository.BaseRepository
  *
  * @author lijun
  */
-interface LoginLogRepository : BaseRepository<LoginLog, Long>
+interface LoginLogRepository : BaseRepository<LoginLog, Long> {
+
+    /**
+     * 根据用户查询登录信息
+     * @param user
+     * @return
+     */
+    fun findByUser(user: SysUser): LoginLog?
+
+}

@@ -17,27 +17,33 @@
  * limitations under the License.
  */
 
-package org.lijun.common.authority.querycondition
+package org.lijun.common.authority.service
 
+import org.lijun.common.authority.entity.LoginLog
 import org.lijun.common.authority.entity.SysUser
-import org.lijun.common.querycondition.DataTableQueryCondition
+import org.lijun.common.authority.querycondition.LoginLogQueryCondition
+import org.lijun.common.service.BaseService
+import org.lijun.common.vo.DataTable
 
 /**
- * 登录日志查询条件
+ * Service - LoginLogService
  *
  * @author lijun
- * @constructor
  */
-class LoginLogQueryCondition : DataTableQueryCondition() {
+interface LoginLogService : BaseService<LoginLog, Long> {
 
     /**
-     * 登录用户名
+     * 根据用户查询登录信息
+     * @param user
+     * @return
      */
-    var username: String? = null
+    fun findByUser(user: SysUser): LoginLog?
 
     /**
-     * 登录用户IP
+     * 分页查询登录日志
+     * @param condition
+     * @return
      */
-    var ip: String? = null
+    fun findPage(condition: LoginLogQueryCondition): DataTable<LoginLog>
 
 }

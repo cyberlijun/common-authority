@@ -19,10 +19,13 @@
 
 package org.lijun.common.authority.entity
 
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
+import org.lijun.common.util.Constants
 import java.util.*
 import javax.persistence.*
 
@@ -41,6 +44,7 @@ class LoginLog : UserAuditingEntity() {
     /**
      * 登录用户
      */
+    @JsonProperty
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", columnDefinition = "BIGINT(10) COMMENT '用户ID'")
     @NotFound(action = NotFoundAction.IGNORE)
@@ -49,18 +53,22 @@ class LoginLog : UserAuditingEntity() {
     /**
      * 登录次数
      */
+    @JsonProperty
     @Column(columnDefinition = "BIGINT(10) COMMENT '登录次数'")
     var loginCount: Long = 0L
 
     /**
      * 登录用户IP
      */
+    @JsonProperty
     @Column(columnDefinition = "VARCHAR(200) COMMENT '登录用户IP'")
     var ip: String? = null
 
     /**
      * 最后登录时间
      */
+    @JsonProperty
+    @JsonFormat(pattern = Constants.DEFAULT_TIMESTAPM_PATTERN, timezone = "GMT+8")
     @Column(columnDefinition = "DATETIME COMMENT '最后登录时间'")
     @Temporal(TemporalType.TIMESTAMP)
     var lastLoginTime: Date? = null

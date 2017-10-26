@@ -71,7 +71,7 @@ open class OrgServiceImpl(repository: OrgRepository) : BaseServiceImpl<Org, Long
     /**
      * 递归创建机构树形结构
      * @param orgs
-     * @param org
+     * @param parent
      * @return
      */
     open internal fun buildTree(orgs: List<Org>, parent: Org): List<Org> {
