@@ -2,7 +2,17 @@
 <html>
     <head>
         <#include "../include/header.ftl">
-        <title>${property("systemInfo.name")}-系统登录日志</title>
+        <title>${property("systemInfo.name")}-系统日志</title>
+        <style>
+            td.details-control {
+                background: url('${ctx}/webjars/common-authority/1.0/images/details_open.png') no-repeat center center;
+                cursor: pointer;
+            }
+
+            tr.shown td.details-control {
+                background: url('${ctx}/webjars/common-authority/1.0/images/details_close.png') no-repeat center center;
+            }
+        </style>
     </head>
     <body>
         <nav class="breadcrumb">
@@ -10,8 +20,8 @@
             首页 <span class="c-gray en">&gt;</span>
             <i class="Hui-iconfont Hui-iconfont-tongji-bing"></i>
             查询统计 <span class="c-gray en">&gt;</span>
-            <i class="Hui-iconfont Hui-iconfont-log"></i>
-            系统登录日志
+            <i class="Hui-iconfont Hui-iconfont-feedback2"></i>
+            系统日志
             <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新">
                 <i class="Hui-iconfont">&#xe68f;</i>
             </a>
@@ -29,33 +39,57 @@
                         <form id="queryForm" class="form form-horizontal">
                             <div class="row cl">
                                 <div class="col-xs-12 col-sm-6">
-                                    <label class="form-label col-xs-12 col-sm-3">登录用户名：</label>
+                                    <label class="form-label col-xs-12 col-sm-3">操作用户：</label>
                                     <div class="formControls col-xs-12 col-sm-9">
-                                        <input id="username" name="username" type="text" class="input-text" placeholder="登录用户名">
+                                        <input id="username" name="username" type="text" class="input-text" placeholder="操作用户">
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-6">
-                                    <label class="form-label col-xs-12 col-sm-3">最后登录IP地址：</label>
+                                    <label class="form-label col-xs-12 col-sm-3">请求URI：</label>
                                     <div class="formControls col-xs-12 col-sm-9">
-                                        <input id="ip" name="ip" type="text" class="input-text" placeholder="最后登录IP地址">
+                                        <input id="requestUri" name="requestUri" type="text" class="input-text" placeholder="请求URI">
                                     </div>
                                 </div>
                             </div>
                             <div class="row cl">
-                                <div class="row cl">
-                                    <div class="col-xs-12 col-sm-6">
-                                        <label class="form-label col-xs-12 col-sm-3">登录起始时间：</label>
-                                        <div class="formControls col-xs-12 col-sm-9">
-                                            <input id="startDate" name="startDate" type="text" class="input-text Wdate" placeholder="登录起始时间"
-                                                   onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')||\'%y-%M-%d\'}'})" readonly>
-                                        </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <label class="form-label col-xs-12 col-sm-3">提交方式：</label>
+                                    <div class="formControls col-xs-12 col-sm-9">
+										<span class="select-box radius">
+											<select class="select" name="method">
+												<option value="" selected>请选择</option>
+												<option value="GET">GET</option>
+												<option value="POST">POST</option>
+											</select>
+										</span>
                                     </div>
-                                    <div class="col-xs-12 col-sm-6">
-                                        <label class="form-label col-xs-12 col-sm-3">登录结束时间：</label>
-                                        <div class="formControls col-xs-12 col-sm-9">
-                                            <input id="endDate" name="endDate" type="text" class="input-text Wdate" placeholder="登录结束时间"
-                                                   onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'})" readonly>
-                                        </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <label class="form-label col-xs-12 col-sm-3">日志类型：</label>
+                                    <div class="formControls col-xs-12 col-sm-9">
+										<span class="select-box radius">
+											<select class="select" name="type">
+												<option value="" selected>请选择</option>
+												<option value="ACCESS_LOG">访问日志</option>
+												<option value="EXCEPTION_LOG">异常日志</option>
+											</select>
+										</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row cl">
+                                <div class="col-xs-12 col-sm-6">
+                                    <label class="form-label col-xs-12 col-sm-3">开始日期：</label>
+                                    <div class="formControls col-xs-12 col-sm-9">
+                                        <input id="startDate" name="startDate" type="text" class="input-text Wdate" placeholder="开始日期"
+                                               onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endDate\')||\'%y-%M-%d\'}'})" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <label class="form-label col-xs-12 col-sm-3">结束日期：</label>
+                                    <div class="formControls col-xs-12 col-sm-9">
+                                        <input id="endDate" name="endDate" type="text" class="input-text Wdate" placeholder="结束日期"
+                                               onfocus="WdatePicker({minDate:'#F{$dp.$D(\'startDate\')}',maxDate:'%y-%M-%d'})" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -72,13 +106,12 @@
                     </div>
                 </li>
             </ul>
-
             <div class="mt-20 panel panel-default">
                 <div class="panel-header">
                     <div class="row cl">
                         <div class="col-xs-12 col-sm-12">
-                            <i class="Hui-iconfont Hui-iconfont-log"></i>
-                            系统登录日志列表
+                            <i class="Hui-iconfont Hui-iconfont-feedback2"></i>
+                            系统日志列表
                         </div>
                     </div>
                 </div>
@@ -87,12 +120,13 @@
                         <table id="listTable" class="table table-border table-bordered table-hover table-bg table-striped" width="100%">
                             <thead>
                                 <tr class="text-c">
-                                    <th>登录用户名</th>
-                                    <th>所在机构</th>
-                                    <th>角色</th>
-                                    <th>登录次数</th>
-                                    <th>最后登录IP</th>
-                                    <th>最后登录时间</th>
+                                    <th>&nbsp;</th>
+                                    <th>日志类型</th>
+                                    <th>操作用户</th>
+                                    <th>请求URI</th>
+                                    <th>提交方式</th>
+                                    <th>操作用户IP</th>
+                                    <th>创建时间</th>
                                 </tr>
                             </thead>
                         </table>
@@ -124,7 +158,7 @@
                     },
                     messages: {
                         ip: {
-                            ip: '最后登录IP地址格式错误！'
+                            ip: '操作用户IP地址格式错误！'
                         }
                     },
                     onkeyup: false,
@@ -150,7 +184,7 @@
                         }
                     },
                     ajax: {
-                        url: "${adminPath}/log/login/list.json",
+                        url: "${adminPath}/log/sys/list.json",
                         cache: false,
                         type: "POST",
                         data: function(d) {
@@ -164,44 +198,48 @@
                         error: handlerAjaxError
                     },
                     columns: [
-                        { 'data': null },
-                        { 'data': null },
-                        { 'data': null },
-                        { 'data': 'loginCount' },
-                        { 'data': 'ip' },
-                        { 'data': 'lastLoginTime' }
+                        { "data": null, "defaultContent": "" },
+                        { "data": "type" },
+                        { "data": "user.username" },
+                        { "data": "requestUri" },
+                        { "data": "method" },
+                        { "data": "remoteAddr" },
+                        { "data": "createDate" }
                     ],
                     rowCallback: function(row, data, index) {
                         $(row).addClass("text-c");
                     },
                     columnDefs: [{
                         "targets": 0,
+                        "className": "details-control"
+                    }, {
+                        "targets": 2,
                         "render": function(data, type, row, meta) {
                             if (row.user) {
                                 return row.user.username;
                             }
 
-                            return '';
-                        }
-                    }, {
-                        "targets": 1,
-                        "render": function(data, type, row, meta) {
-                            if (row.user && row.user.org) {
-                                return row.user.org.name + '（机构编码：' + row.user.org.code + '）';
-                            }
-
-                            return '';
-                        }
-                    }, {
-                        "targets": 2,
-                        "render": function(data, type, row, meta) {
-                            if (row.user && row.user.role) {
-                                return row.user.role.name;
-                            }
-
-                            return '';
+                            return "";
                         }
                     }]
+                });
+
+                $listTable.find("tbody").on("click", "td.details-control", function(e) {
+                    var table = $listTable.DataTable();
+
+                    var tr = $(this).closest('tr');
+
+                    var row = table.row(tr);
+
+                    if (row.child.isShown()) {
+                        row.child.hide();
+
+                        tr.removeClass('shown');
+                    } else {
+                        row.child(format(row.data())).show();
+
+                        tr.addClass('shown');
+                    }
                 });
 
                 $btnSearch.on('click', function (e) {
@@ -216,6 +254,19 @@
                     $queryForm.resetForm();
                 });
             });
+
+            function format(d) {
+                var html = '';
+
+                html += '用户代理：' + d.userAgent + '<br>';
+                html += '提交参数：' + d.params;
+
+                if (-1 != d.type.indexOf("异常")) {
+                    html += '<br>异常信息：' + d.exception;
+                }
+
+                return html;
+            }
         </script>
     </body>
 </html>

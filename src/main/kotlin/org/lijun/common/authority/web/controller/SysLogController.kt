@@ -19,9 +19,9 @@
 
 package org.lijun.common.authority.web.controller
 
-import org.lijun.common.authority.entity.LoginLog
-import org.lijun.common.authority.querycondition.LoginLogQueryCondition
-import org.lijun.common.authority.service.LoginLogService
+import org.lijun.common.authority.entity.SysLog
+import org.lijun.common.authority.querycondition.SysLogQueryCondition
+import org.lijun.common.authority.service.SysLogService
 import org.lijun.common.vo.DataTable
 import org.lijun.common.web.controller.BaseController
 import org.springframework.beans.factory.annotation.Autowired
@@ -32,32 +32,32 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 
 /**
- * Controller - LoginLogController
+ * Controller - SysLogController
  *
  * @author lijun
  * @constructor
  */
 @Controller
-@RequestMapping("\${adminPath:admin}/log/login")
-open class LoginLogController : BaseController() {
+@RequestMapping("\${adminPath:admin}/log/sys")
+open class SysLogController : BaseController() {
 
     @Autowired
-    private lateinit var loginLogService: LoginLogService
+    private lateinit var sysLogService: SysLogService
 
     /**
-     * 转发到登录日志查询首页
+     * 转发到系统日志查询首页
      * @return
      */
     @GetMapping
-    open fun index(): String = "admin/login_log/list"
+    open fun index(): String = "admin/sys_log/list"
 
     /**
-     * 分页查询登录日志
+     * 分页查询系统日志
      * @param condition
      * @return
      */
     @PostMapping("list")
     @ResponseBody
-    open fun list(condition: LoginLogQueryCondition): DataTable<LoginLog> = this.loginLogService.findPage(condition)
+    open fun list(condition: SysLogQueryCondition): DataTable<SysLog> = this.sysLogService.findPage(condition)
 
 }

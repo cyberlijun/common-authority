@@ -19,8 +19,11 @@
 
 package org.lijun.common.authority.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
+import org.lijun.common.authority.serializer.LogTypeSerializer
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Table
@@ -57,42 +60,50 @@ class SysLog : UserAuditingEntity() {
     /**
      * 日志类型
      */
+    @JsonProperty
+    @JsonSerialize(using = LogTypeSerializer::class)
     @Column(name = "[type]", columnDefinition = "INT(1) COMMENT '日志类型'")
     var type: LogType? = null
 
     /**
      * 用户ip地址
      */
+    @JsonProperty
     @Column(columnDefinition = "VARCHAR(200) COMMENT '用户ip地址'")
     var remoteAddr: String? = null
 
     /**
      * 用户浏览器agent
      */
+    @JsonProperty
     @Column(columnDefinition = "TEXT COMMENT '用户浏览器agent'")
     var userAgent: String? = null
 
     /**
      * 请求URI
      */
+    @JsonProperty
     @Column(columnDefinition = "TEXT COMMENT '请求URI'")
     var requestUri: String? = null
 
     /**
      * 请求方法
      */
+    @JsonProperty
     @Column(columnDefinition = "VARCHAR(5) COMMENT '请求方法'")
     var method: String? = null
 
     /**
      * 请求参数
      */
+    @JsonProperty
     @Column(columnDefinition = "LONGTEXT COMMENT '请求参数'")
     var params: String? = null
 
     /**
      * 异常信息
      */
+    @JsonProperty
     @Column(columnDefinition = "LONGTEXT COMMENT '异常信息'")
     var exception: String? = null
 
