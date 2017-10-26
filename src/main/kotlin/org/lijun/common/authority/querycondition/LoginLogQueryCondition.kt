@@ -20,7 +20,7 @@
 package org.lijun.common.authority.querycondition
 
 /**
- *
+ * 登录日志查询条件
  *
  * @author lijun
  * @constructor
