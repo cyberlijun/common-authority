@@ -206,7 +206,7 @@ open class SysUserController : BaseController() {
      * 加载机构列表
      * @param model
      */
-    private fun loadOrgs(model: Model) {
+    open internal fun loadOrgs(model: Model) {
         val orgs: List<Org> = this.orgService.findAll()
 
         model.addAttribute("orgs", orgs)

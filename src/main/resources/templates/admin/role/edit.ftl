@@ -9,6 +9,7 @@
     <body>
         <div class="page-container">
             <form action="${adminPath}/role/update.json" class="form form-horizontal" method="post">
+                <#if role.org??>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">
                         <span class="c-red">*</span>所属机构：
@@ -18,6 +19,7 @@
                         <input id="orgId" name="org.id" value="${role.org.id}" type="hidden">
                     </div>
                 </div>
+                </#if>
                 <div class="row cl">
                     <label class="form-label col-xs-4 col-sm-2">
                         <span class="c-red">*</span>角色名称：

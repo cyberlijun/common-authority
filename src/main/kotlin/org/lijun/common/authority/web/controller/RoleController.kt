@@ -198,7 +198,7 @@ open class RoleController : BaseController() {
      * 加载机构列表
      * @param model
      */
-    private fun loadOrgs(model: Model) {
+    open internal fun loadOrgs(model: Model) {
         val orgs: List<Org> = this.orgService.findAll()
 
         model.addAttribute("orgs", orgs)
@@ -208,7 +208,7 @@ open class RoleController : BaseController() {
      * 加载菜单列表
      * @param model
      */
-    private fun loadMenus(model: Model) {
+    open internal fun loadMenus(model: Model) {
         val menus: List<SysMenu> = this.sysMenuService.findAll()
 
         model.addAttribute("menus", menus)
@@ -219,7 +219,7 @@ open class RoleController : BaseController() {
      * @param role
      * @param menuIds
      */
-    private fun setRoleMenus(role: Role, menuIds: Array<Long>) {
+    open internal fun setRoleMenus(role: Role, menuIds: Array<Long>) {
         var menus: Set<SysMenu> = setOf()
 
         menuIds.forEach {

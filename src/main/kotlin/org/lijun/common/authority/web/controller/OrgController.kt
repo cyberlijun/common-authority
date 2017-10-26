@@ -159,7 +159,7 @@ open class OrgController : BaseController() {
      * @param model
      * @return
      */
-    private fun loadAreas(model: Model) {
+    open internal fun loadAreas(model: Model) {
         val areas: List<Area> = this.areaService.findAll()
 
         model.addAttribute("areas", areas)

@@ -161,9 +161,13 @@
                     columnDefs: [{
                         "targets": 1,
                         "render": function(data, type, row, meta) {
-                            var org = row.org;
+                            if (row.org) {
+                                var org = row.org;
 
-                            return org.name + '（机构编码：' + org.code + '）';
+                                return org.name + '（机构编码：' + org.code + '）';
+                            }
+
+                            return '';
                         }
                     }, {
                         "targets": 2,

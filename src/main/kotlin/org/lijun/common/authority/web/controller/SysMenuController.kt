@@ -148,7 +148,7 @@ open class SysMenuController : BaseController() {
      * 解析菜单URL中的${adminPath}
      * @param menu
      */
-    private fun resolveMenuUrl(menu: SysMenu) {
+    open internal fun resolveMenuUrl(menu: SysMenu) {
         if (StringUtils.isNotBlank(menu.menuUrl) && menu.menuUrl!!.contains("\${adminPath}")) {
             val cfg: Configuration = freeMarkerConfigurer.configuration
 
